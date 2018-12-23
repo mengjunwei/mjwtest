@@ -131,3 +131,9 @@ STATIC_URL = '/static/'
 #     "*"
 # )
 # CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}
