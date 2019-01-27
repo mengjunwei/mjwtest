@@ -79,22 +79,22 @@ WSGI_APPLICATION = 'mjwtest.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'NAME': 'mjw',
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'USER': 'root',
-    #     'PASSWORD': 'mysql',
-    #     'HOST': '192.168.1.129',
-    #     'PORT': '3306',
-    # },
     'default': {
         'NAME': 'mjw',
         'ENGINE': 'django.db.backends.mysql',
         'USER': 'root',
-        'PASSWORD': 'mjwmysql',
-        'HOST': '127.0.0.1',
+        'PASSWORD': 'mysql',
+        'HOST': '192.168.1.129',
         'PORT': '3306',
-    }
+    },
+    # 'default': {
+    #     'NAME': 'mjw',
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'USER': 'root',
+    #     'PASSWORD': 'mjwmysql',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '3306',
+    # }
 }
 
 
