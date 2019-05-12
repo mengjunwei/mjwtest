@@ -2,7 +2,7 @@
 from django.db import models
 from django.forms.models import model_to_dict
 import logging
-from datalogger.models import Datalogger
+from .models import Datalogger
 from datalogger import globals
 
 logger = logging.getLogger('utils')
@@ -59,7 +59,7 @@ class LogOnUpdateDeleteModel(ModelDiffMixin, models.Model):
                              'model_name': self._meta.model.__name__, 'object_id': self.pk,
                              'field_name': key, 'before_value': value, 'operator': globals.username}
                 logger.info('删除数据：%s' % dataloger)
-                Datalogger.objects.create(**dataloger)
+                Datalogger.objects.using('datalogger').create(**dataloger)
         else:
             logger.info('请求没有 event_id 字段，不记录日志')
         super(LogOnUpdateDeleteModel, self).delete(*args, **kwargs)
@@ -87,7 +87,7 @@ class LogOnUpdateDeleteModel(ModelDiffMixin, models.Model):
                     dataloger['before_value'] = before
                     dataloger['after_value'] = after
                     dataloger['operator'] = globals.username  # self.log_operator
-                    Datalogger.objects.create(**dataloger)
+                    Datalogger.objects.using('datalogger').create(**dataloger)
                     logger.info('记录数据：%s' % dataloger)
                     # 判定是否需要事件推送
                     if 'hostname' == name and self._meta.model.__name__ == 'Asset':
@@ -111,7 +111,7 @@ class LogOnUpdateDeleteModel(ModelDiffMixin, models.Model):
                     dataloger = {'event_id': globals.event_id, 'event_type': 'add',
                                  'model_name': self._meta.model.__name__, 'object_id': self.pk,
                                  'field_name': key, 'after_value': value, 'operator': globals.username}
-                    Datalogger.objects.create(**dataloger)
+                    Datalogger.objects.using('datalogger').create(**dataloger)
                     logger.info('新增数据记录：%s' % dataloger)
             else:
                 logger.info('请求没有 event_id 字段，不记录日志')

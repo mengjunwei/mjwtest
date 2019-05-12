@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from utils.modelmixins import LogOnUpdateDeleteModel
+from datalogger.modelmixins import LogOnUpdateDeleteModel
 
 # Create your models here.
 
