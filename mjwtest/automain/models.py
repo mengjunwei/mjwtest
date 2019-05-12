@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+from utils.modelmixins import LogOnUpdateDeleteModel
 
 # Create your models here.
 
 
-class Person(models.Model):
+class Person(LogOnUpdateDeleteModel):
     SEX_CHOICES = (
         ("man", "男"),
         ("woman", "女")
@@ -17,3 +18,11 @@ class Person(models.Model):
 
     def __str__(self):
         return self.phone
+
+
+class PersonPosition(models.Model):
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    position = models.CharField(max_length=256, verbose_name='职位')
+
+    def __str__(self):
+        return '{}-{}'.format(self.person.user.username, self.position)

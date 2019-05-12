@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    # 'corsheaders',
-    'automain'
+    'automain',
+    'infomanager',
+    'api',
+    'datalogger'
 ]
 
 MIDDLEWARE = [
@@ -80,21 +82,38 @@ WSGI_APPLICATION = 'mjwtest.wsgi.application'
 
 DATABASES = {
     'default': {
-        'NAME': 'mjw',
+        'NAME': 'mjwtest',
         'ENGINE': 'django.db.backends.mysql',
         'USER': 'root',
         'PASSWORD': 'mysql',
-        'HOST': '192.168.1.129',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     },
-    # 'default': {
-    #     'NAME': 'mjw',
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'USER': 'root',
-    #     'PASSWORD': 'mjwmysql',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '3306',
-    # }
+    'infomanager': {
+        'NAME': 'infomanager',
+        'ENGINE': 'django.db.backends.mysql',
+        'USER': 'root',
+        'PASSWORD': 'mysql',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+    },
+    'datalogger': {
+        'NAME': 'datalogger',
+        'ENGINE': 'django.db.backends.mysql',
+        'USER': 'root',
+        'PASSWORD': 'mysql',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+    },
+
+}
+
+# 配置数据库与app对应关系
+DATABASE_ROUTERS = []
+DATABASE_APPS_MAPPING = {
+    'automain': 'default',
+    'infomanager': 'infomanager',
+    'datalogger': 'datalogger'
 }
 
 
@@ -150,3 +169,71 @@ REST_FRAMEWORK = {
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
 # LOGOUT_URL = '/auth/logout/'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'my_formatter': {
+            'format': '%(asctime)s %(name)s [%(levelname)s] %(message)s'
+        },
+        'verbose': {
+            'format': '%(levelname)s - [%(asctime)s] [%(module)s %(filename)s %(funcName)s %(lineno)d %(pathname)s] - %(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'my_formatter'
+        },
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 1024 * 1024 * 50,
+            'formatter': 'verbose',
+            'backupCount': 10,
+            'filename': os.path.join(BASE_DIR, "logs/error.log")
+        },
+        'warning_file': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 1024 * 1024 * 50,
+            'formatter': 'verbose',
+            'backupCount': 10,
+            'filename': os.path.join(BASE_DIR, "logs/warning.log")
+        },
+        'info_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 1024 * 1024 * 50,
+            'formatter': 'verbose',
+            'backupCount': 10,
+            'filename': os.path.join(BASE_DIR, "logs/info.log")
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 1024 * 1024 * 50,
+            'formatter': 'my_formatter',
+            'backupCount': 10,
+            'filename': os.path.join(BASE_DIR, "logs/debug.log")
+        }
+    },
+    'loggers': {
+        'api': {
+            'handlers': ['error_file', 'warning_file', 'info_file'],
+            'level': 'INFO'
+        },
+        'utils': {
+            'handlers': ['error_file', 'warning_file', 'info_file'],
+            'level': 'INFO'
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': True,
+        }
+    }
+}
